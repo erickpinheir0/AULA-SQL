@@ -100,11 +100,12 @@ SELECT * FROM cidade;
 
 INSERT INTO pessoa VALUES (NULL, "João", 1.85, "1985-05-20", "Rua A, 100", 3);
 
-INSERT INTO pessoa(nome, altura, codCidade) VALUES ("Maria", 1.78, 3);
+INSERT INTO pessoa(nome, altura, codCidade, nascimento, endereco) VALUES ("Zacarias", 2.01, 5, "2005-07-25", "Rua F, 500");
 
 INSERT INTO pessoa(nome, altura, codCidade, nascimento, endereco) VALUES 
 ("José", 1.78, 1, "1994-02-05", "Rua C, 200"),
 ("Julia", 1.50, 4, "2005-10-18", "Rua D, 400");
+
 
 INSERT INTO pessoa(nome) VALUES ("Renata") , ("Roberto");
 
@@ -151,4 +152,49 @@ INSERT INTO pedido_produto VALUES
 INSERT INTO pedido_produto (codPedido, codProduto, precoVendido) VALUES 
 ( 2 , 1 ,  9.89 ) , 
 ( 2 , 4 ,  3.99 ) ;
+
+DESCRIBE pedido;
+SELECT * FROM pedido_produto;
+
+SELECT idPessoa, nome, altura, nascimento
+FROM pessoa
+ORDER BY altura DESC, nome DESC; 
+
+SELECT idPessoa, nome, altura, 
+	DATE_FORMAT(nascimento, '%d/%m/%Y') AS 'Data de Nascimento'
+FROM pessoa; 
+
+-- Funções de Agregação
+SELECT MIN( altura ), MAX( altura ), AVG( altura ), 
+		SUM( altura), COUNT( altura )
+FROM pessoa;
+
+SELECT nome, altura 
+FROM pessoa
+WHERE altura > ( SELECT AVG(altura) FROM pessoa );
+
+SELECT nome, altura
+FROM pessoa
+WHERE nome LIKE '%o%' AND altura > 1.6;
+select * from produto;
+
+
+-- 1) Monte uma consulta que retorna os produtos
+-- que contenham a letra A no nome e que o preço 
+-- seja maior que 5, ordenando pelo nome do produto
+
+-- 2) Monte uma consulta que retorna o nome e a 
+-- data de nascimento, somente das pessoas que
+-- nasceram até o dia 15
+
+-- 3) Monte uma consulta que retorna o nome do produto
+-- o valor em reais de estoque de cada produto
+
+-- 4) Monte uma consulta que retorna qual o valor em reais
+-- do estoque inteiro 
+
+select nome, preco
+from produto
+where nome like '%A%' AND preco > 5.00;
+
 
