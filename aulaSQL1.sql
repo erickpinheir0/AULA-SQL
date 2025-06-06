@@ -193,8 +193,79 @@ select * from produto;
 -- 4) Monte uma consulta que retorna qual o valor em reais
 -- do estoque inteiro 
 
-select nome, preco
-from produto
-where nome like '%A%' AND preco > 5.00;
+-- 1
+SELECT * FROM produto
+WHERE nome LIKE '%a%' AND preco > 5
+ORDER BY nome;
+
+-- 2
+SELECT nome, DATE_FORMAT(nascimento, '%d/%m/%Y')  AS nascimento
+FROM pessoa
+WHERE DATE_FORMAT(nascimento, '%d') < 16;
+
+-- 3
+SELECT nome,  (preco * quantidade) AS estoque
+FROM produto;
+
+SELECT nome, preco, quantidade, (preco * quantidade) AS estoque, 
+CONCAT( "R$ " , (preco * quantidade) ) AS valor
+FROM produto
+ORDER BY estoque;
+
+-- 4
+SELECT SUM( preco * quantidade ) AS estoqueTotal
+FROM produto;
+
+
+-- 06/06/2025 ---------
+
+INSERT INTO cidade (nome) VALUES ("Capão da Canoa");
+
+SELECT DISTINCT * FROM cidade ORDER BY nome;
+
+SELECT nome, preco
+FROM produto
+ORDER BY preco DESC
+LIMIT 2;
+
+SELECT nome, preco
+FROM produto
+WHERE preco IN (9.89, 3.95, 7.99, 5.45);
+
+
+SELECT pessoa.idPessoa, pessoa.nome, pessoa.codCidade, 
+cidade.idCidade, cidade.nome
+FROM pessoa
+INNER JOIN cidade ON pessoa.codCidade = cidade.idCidade;
+
+SELECT p.idPessoa, p.nome, p.codCidade, c.idCidade, c.nome
+FROM pessoa p
+INNER JOIN cidade c ON p.codCidade = c.idCidade;
+
+SELECT pessoa.idPessoa, pessoa.nome, pessoa.codCidade, 
+cidade.idCidade, cidade.nome
+FROM pessoa
+LEFT JOIN cidade ON pessoa.codCidade = cidade.idCidade;
+
+SELECT pessoa.idPessoa, pessoa.nome, pessoa.codCidade, 
+cidade.idCidade, cidade.nome
+FROM pessoa
+RIGHT JOIN cidade ON pessoa.codCidade = cidade.idCidade;
+
+-- construa uma consulta que retorna todos os produtos, 
+-- juntamente com o nome da sua categoria 
+-- independetemente se o produto possui categoria 
+
+-- monte uma consulta que retorna pessoas,
+-- juntamente com o nome da sua cidade, mas só das pessoas
+-- que moram em cidades que tenham a letra A no nome
+-- ordenando pelo nome das pessoas
+
+
+SELECT p.*, c.nome
+FROM pessoa p
+JOIN cidade c ON c.idCidade = p.codCidade
+WHERE c.nome LIKE '%a%' 
+ORDER BY p.nome
 
 
