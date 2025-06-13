@@ -266,6 +266,60 @@ SELECT p.*, c.nome
 FROM pessoa p
 JOIN cidade c ON c.idCidade = p.codCidade
 WHERE c.nome LIKE '%a%' 
-ORDER BY p.nome
+ORDER BY p.nome;
 
 
+SELECT idCidade, nome , 
+	( select COUNT(idPessoa)
+	  FROM pessoa
+      WHERE codCidade = idCidade
+    ) AS moradores
+FROM cidade;
+
+SELECT nome, preco
+FROM produto
+WHERE preco > ( SELECT AVG(preco) 
+				FROM produto 
+             --   WHERE nome LIKE 'a%'
+                );
+
+
+-- Monte uma consulta que retorna uma lista de categorias
+-- com IdCategoria, com o nome da categoria e o total de
+-- produtos que pertencem a cada categoria.
+-- Independentemente se a categoria possui produtos.
+
+SELECT c.idCategoria, c.nome,
+			(SELECT COUNT(p.idProduto)
+            FROM produto p
+            INNER JOIN categoria_produto cp
+            ON p.idProduto = cp.codProduto
+            WHERE cp.codCategoria = c.idCategoria
+            ) AS totalProdutos
+FROM categoria c;
+
+-- Monte uma consulta que retorna a lista de pedidos
+-- com da data do pedido, o nome do cliente, independemente se o pedido
+-- tem cliente e o valor total do pedido
+
+SELECT p.idPedido, DATE_FORMAT( p.horario, '%d/%m/%Y %H:%i:%s') AS data,
+	c.nome AS cliente , 
+			( 
+				SELECT SUM(pp.precoVendido * pp.quantidadeVendida)  
+				FROM pedido_produto pp
+				WHERE pp.codPedido = p.idPedido
+			) AS valorPedido
+
+FROM pedido p
+LEFT JOIN pessoa c ON p.codCliente = c.idPessoa;
+
+
+SELECT * FROM pedido_produto;
+
+INSERT INTO pedido VALUES ();
+
+DESCRIBE pedido;
+
+ALTER TABLE pedido 
+CHANGE codCliente 
+codCliente INT NULL;     
