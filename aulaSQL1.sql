@@ -323,3 +323,65 @@ DESCRIBE pedido;
 ALTER TABLE pedido 
 CHANGE codCliente 
 codCliente INT NULL;     
+
+
+-- 20-06-2025 ------------------------------------------------------------------------------------------------------------------------
+
+SELECT p.idProduto, p.nome 
+FROM produto p
+WHERE EXISTS ( 
+				SELECT pp.codProduto
+                FROM pedido_produto pp
+                WHERE pp.codProduto = p.idProduto 
+						AND pp.quantidadeVendida > 0
+			);
+SELECT * FROM pedido_produto;            
+
+-- Utilizando a função EXISTS, construa uma consulta que 
+-- retorna as cidades que não possuem moradores
+SELECT c.idCidade, c.nome 
+FROM cidade c
+WHERE NOT EXISTS (
+					SELECT * FROM pessoa p
+                    WHERE p.codCidade = c.idCidade
+				);
+                
+
+
+
+-- Consulta que retorna as categorias e a quantidade de produtos 
+-- que cada categoria tem	
+SELECT c.nome, COUNT( cp.codProduto ) AS total
+FROM categoria c
+LEFT JOIN categoria_produto cp ON cp.codCategoria = c.idCategoria
+GROUP BY nome;
+
+-- Monte uma consulta que retorna os nomes das cidades e 
+-- a quantidade de moradores de cada cidade, inclusive das
+-- cidades que não possuem moradores
+SELECT c.nome, COUNT( p.idPessoa ) AS moradores
+FROM cidade c 
+LEFT JOIN pessoa p ON p.codCidade = c.idCidade
+GROUP BY c.nome
+ORDER BY moradores DESC, nome;
+
+
+-- consulta que retorna os nomes das cidades e 
+-- a quantidade de moradores de cada cidade, apenas das cidades que possuem
+-- mais de 1 morador
+SELECT c.nome, COUNT( p.idPessoa ) AS moradores
+FROM cidade c 
+INNER JOIN pessoa p ON p.codCidade = c.idCidade
+GROUP BY c.nome
+HAVING moradores > 1
+ORDER BY moradores DESC, nome;
+
+-- Monte uma consulta que retorna os nomes das categorias e 
+-- a quantidade de produtos de cada categoria, mas apenas
+-- das categorias que possuem pelo menos 2 produtos
+SELECT c.nome, COUNT( cp.codProduto ) AS total
+FROM categoria c
+INNER JOIN categoria_produto cp ON cp.codCategoria = c.idCategoria
+GROUP BY nome
+HAVING total > 1;
+
